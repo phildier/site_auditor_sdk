@@ -1,11 +1,11 @@
-== Raven Site Auditor SDK
+== Raven Site Auditor SDK == 
 
 PHP SDK for Raven's Site Auditor.
 
-=== Management API
+=== Management API ===
 
 Used to manage User API tokens.
 
-=== User API
+=== User API ===
 
 Manages a user's sites and crawl sessions.
