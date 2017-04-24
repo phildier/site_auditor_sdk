@@ -1,0 +1,20 @@
+{
+	"name": "raventools/site_auditor_sdk",
+	"description": "PHP SDK for Raven's Site Auditor",
+	"type": "library",
+	"require": {
+		"guzzlehttp/guzzle": "^6.2"
+	},
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Phil Dier",
+			"email": "phil@raventools.com"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"RavenTools\\SiteAuditorSdk": "src"
+		}
+	}
+}
