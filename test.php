@@ -8,7 +8,7 @@ use RavenTools\SiteAuditorSdk\Resources\CrawlSession;
 use RavenTools\SiteAuditorSdk\Resources\Issue;
 use RavenTools\SiteAuditorSdk\Resources\ResolvedIssue;
 
-$auth_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJyYXZlbi1hdWRpdG9yIiwiYXVkIjoicmF2ZW4tdG9vbHMiLCJuYW1lIjoiUGhpbCBEaWVyIiwiZW1haWwiOiJwaGlsQGRpZXIudXMiLCJpYXQiOiIxNDkxOTQwMTA4Iiwic3ViIjoicmF2ZW4tdG9vbHN8MSJ9.MkBeocyNp3tAOG5ykvL_sLJi1_H6efyW1LcQyPcQaVY";
+$auth_token = file_get_contents("auth_token.txt");
 
 $client = new Client([
 	'auth_token' => $auth_token,
@@ -22,6 +22,13 @@ if(count($argv) > 1) {
 }
 
 switch($command) {
+case "createtoken":
+	$management = new Management([
+		'client' => $client,
+		'client_name' => 'raventools',
+	]);
+	break;
+
 case "listsites":
 	$sites = $client->factory(Site::class)->all();
 

@@ -26,7 +26,7 @@ class Client {
 	 * Initialize a new Auditor client
 	 */
 	public function __construct($params = []) {
-		if(array_key_exists('auth_token', $params) && $params['debug'] === true) {
+		if(array_key_exists('debug', $params) && $params['debug'] === true) {
 			$this->debug = true;
 		}
 
@@ -89,9 +89,11 @@ class Client {
 		$method = strtoupper($method);
 		$http_client = $this->getHttpClient();
 
-		$params['headers'] = [
-			'Authorization' => sprintf('Bearer %s', $this->getAuthToken())
-		];
+		if($this->getAuthToken()) {
+			$params['headers'] = [
+				'Authorization' => sprintf('Bearer %s', $this->getAuthToken())
+			];
+		}
 
 		$params['query'] = $this->parseQueryParams($params);
 
