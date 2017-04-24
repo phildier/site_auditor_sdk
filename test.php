@@ -3,12 +3,15 @@
 include('vendor/autoload.php');
 
 use RavenTools\SiteAuditorSdk\Client;
+use RavenTools\SiteAuditorSdk\Management;
 use RavenTools\SiteAuditorSdk\Resources\Site;
 use RavenTools\SiteAuditorSdk\Resources\CrawlSession;
 use RavenTools\SiteAuditorSdk\Resources\Issue;
 use RavenTools\SiteAuditorSdk\Resources\ResolvedIssue;
 
-$auth_token = file_get_contents("auth_token.txt");
+$auth_token = load_var("auth_token.txt");
+$client_id = load_var("client_id.txt");
+$client_secret = load_var("client_secret.txt");
 
 $client = new Client([
 	'auth_token' => $auth_token,
@@ -26,7 +29,18 @@ case "createtoken":
 	$management = new Management([
 		'client' => $client,
 		'client_name' => 'raventools',
+		'client_id' => $client_id,
+		'client_secret' => $client_secret
 	]);
+
+	$token = $management->createToken([
+		'user_id' => 1,
+		'name' => 'Test McTesty',
+		'email' => 'test@example.com'
+	]);
+
+	print_r($token);
+
 	break;
 
 case "listsites":
@@ -219,4 +233,10 @@ case "deleteresolvedissue":
 	print_r($response);
 
 	break;
+}
+
+function load_var($filename) {
+	if(file_exists($filename)) {
+		return trim(file_get_contents($filename));
+	}
 }

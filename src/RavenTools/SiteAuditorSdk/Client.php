@@ -53,10 +53,6 @@ class Client {
 	}
 
 	public function getAuthToken() {
-		if(is_null($this->token)) {
-			throw new RuntimeException('Missing authentication token');
-		}
-
 		return $this->token;
 	}
 
