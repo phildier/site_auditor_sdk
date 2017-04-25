@@ -8,6 +8,7 @@ use RavenTools\SiteAuditorSdk\Resources\Site;
 use RavenTools\SiteAuditorSdk\Resources\CrawlSession;
 use RavenTools\SiteAuditorSdk\Resources\Issue;
 use RavenTools\SiteAuditorSdk\Resources\ResolvedIssue;
+use RavenTools\SiteAuditorSdk\Resources\Usage;
 
 $auth_token = load_var("auth_token.txt");
 $client_id = load_var("client_id.txt");
@@ -36,7 +37,8 @@ case "createtoken":
 	$token = $management->createToken([
 		'user_id' => 1,
 		'name' => 'Test McTesty',
-		'email' => 'test@example.com'
+		'email' => 'test@example.com',
+		'package' => 'API-Agency'
 	]);
 
 	print_r($token);
@@ -62,6 +64,17 @@ case "getsite":
 	$id = $argv[2];
 
 	echo $client->factory(Site::class)->get($id);
+
+	break;
+
+case "crawlsite":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	print_r($client->factory(Site::class)->crawl($id));
 
 	break;
 
@@ -231,6 +244,13 @@ case "deleteresolvedissue":
 	]);
 
 	print_r($response);
+
+	break;
+
+case "getusage":
+	$response = $client->factory(Usage::class)->get();
+
+	echo $response;
 
 	break;
 }
