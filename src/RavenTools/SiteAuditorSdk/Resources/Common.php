@@ -94,9 +94,13 @@ class Common {
 	/**
 	 * given an id parameter, fetches and returns a record
 	 */
-	public function get($resource_id) {
+	public function get($resource_id = null) {
 		if(is_null($this->get_endpoint)) {
 			throw new BadMethodCallException('method not supported on this resource');
+		}
+
+		if(is_null($resource_id)) {
+			$resource_id = $this->id;
 		}
 
 		$uri = $this->substitute($this->get_endpoint,['id' => $resource_id]);

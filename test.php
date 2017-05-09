@@ -86,8 +86,7 @@ case "createsite":
 	$url = $argv[2];
 
 	$site = $client->factory(Site::class)->create([
-		'url' => $url,
-		'max_urls' => 10
+		'url' => $url
 	]);
 
 	echo $site;
