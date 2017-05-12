@@ -2,6 +2,8 @@
 
 namespace RavenTools\SiteAuditorSdk\Resources;
 
+use RavenTools\SiteAuditorSdk\ResourceCollection;
+
 class Issue extends Common {
 
 	protected $all_endpoint = "issues/{crawl_session_id}";
@@ -15,14 +17,10 @@ class Issue extends Common {
 		$uri = $this->substitute($this->table_endpoint,$params);
 		$response = $this->client->request('GET', $uri, $params);
 
-		$decoded = $this->client->decode($response);
-
-		$issue_records = [];
-		foreach($decoded['records'] as $row) {
-			$row['client'] = $this->client;
-			$issue_records[] = new IssueRecord($row);
-		}
-
-		return $issue_records;
+		return new ResourceCollection([
+			'client' => $this->client,
+			'resource_type' => static::class,
+			'response' => $response
+		]);
 	}
 }

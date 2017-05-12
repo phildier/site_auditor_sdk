@@ -3,6 +3,7 @@
 namespace RavenTools\SiteAuditorSdk\Resources;
 
 use RavenTools\SiteAuditorSdk\Client;
+use RavenTools\SiteAuditorSdk\ResourceCollection;
 use RuntimeException;
 use BadMethodCallException;
 use JsonSerializable;
@@ -77,19 +78,11 @@ class Common implements JsonSerializable {
 			return false;
 		}
 
-		$decoded = $this->client->decode($response);
-
-		$resources = [];
-		foreach($decoded['records'] as $record) {
-			$params = array_merge([
-					'client' => $this->client
-				],
-				(array) $record
-			);
-			$resources[] = new static($params);
-		}
-
-		return $resources;
+		return new ResourceCollection([
+			'client' => $this->client,
+			'response' => $response,
+			'resource_type' => static::class
+		]);
 	}
 
 	/**

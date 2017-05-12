@@ -54,6 +54,9 @@ case "listsites":
 		echo $site;
 	}
 
+	printf("total %s\n", $sites->getTotal());
+	printf("filtered %s\n", $sites->getFiltered());
+
 	break;
 
 case "getsite":
@@ -198,6 +201,9 @@ case "getissuetable":
 	foreach($issues as $issue) {
 		echo $issue;
 	}
+
+	printf("total %s\n", $issues->getTotal());
+	printf("filtered %s\n", $issues->getFiltered());
 
 	break;
 
