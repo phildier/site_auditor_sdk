@@ -146,6 +146,19 @@ case "deletesession":
 
 	break;
 
+case "getprevioussession":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	$response = $client->factory(CrawlSession::class)->previous($id);
+
+	print_r($response);
+
+	break;
+
 case "listissues":
 	if(!isset($argv[2])) {
 		echo "id argument required\n";

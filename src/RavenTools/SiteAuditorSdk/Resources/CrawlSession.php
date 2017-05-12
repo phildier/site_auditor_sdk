@@ -19,7 +19,7 @@ class CrawlSession extends Common {
 		];
 
 		$uri = $this->substitute($this->previous_endpoint, $params);
-		$response = $this->client->request('POST', $uri);
+		$response = $this->client->request('GET', $uri);
 
 		return $this->client->decode($response);
 	}

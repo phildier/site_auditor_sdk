@@ -5,11 +5,12 @@ namespace RavenTools\SiteAuditorSdk\Resources;
 use RavenTools\SiteAuditorSdk\Client;
 use RuntimeException;
 use BadMethodCallException;
+use JsonSerializable;
 
 /**
  * Common resource functionality
  */
-class Common {
+class Common implements JsonSerializable {
 
 	/**
 	 * Auditor SDK Client object
@@ -209,5 +210,13 @@ class Common {
 
 	public function __toString() {
 		return print_r($this->data, true);
+	}
+
+	public function to_array() {
+		return $this->data;
+	}
+
+	public function jsonSerialize() {
+		return $this->to_array();
 	}
 }
