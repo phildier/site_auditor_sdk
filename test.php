@@ -9,6 +9,7 @@ use RavenTools\SiteAuditorSdk\Resources\CrawlSession;
 use RavenTools\SiteAuditorSdk\Resources\Issue;
 use RavenTools\SiteAuditorSdk\Resources\ResolvedIssue;
 use RavenTools\SiteAuditorSdk\Resources\Usage;
+use RavenTools\SiteAuditorSdk\Resources\PageSpeed;
 
 $auth_token = load_var("auth_token.txt");
 $client_id = load_var("client_id.txt");
@@ -195,7 +196,9 @@ case "getissuetable":
 	$issues = $client->factory(Issue::class)->table([
 		'crawl_session_id' => $id,
 		'issue_name' => $issue_name,
-		'order' => 'duplicate_url desc'
+		'order' => 'blocked_by_robots desc',
+		'offset' => 0,
+		'limit' => 10,
 	]);
 
 	foreach($issues as $issue) {
@@ -267,6 +270,26 @@ case "deleteresolvedissue":
 
 case "getusage":
 	$response = $client->factory(Usage::class)->get();
+
+	echo $response;
+
+case "getpagespeed":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	if(!isset($argv[3])) {
+		echo "strategy argument required\n";
+		exit(1);
+	}
+	$strategy = $argv[3];
+
+	$response = $client->factory(PageSpeed::class)->get([
+		'crawl_session_id' => $id,
+		'strategy' => $strategy
+	]);
 
 	echo $response;
 
