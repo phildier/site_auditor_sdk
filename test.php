@@ -137,6 +137,21 @@ case "getsession":
 
 	break;
 
+case "getcrawlhistory":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	$response = $client->factory(CrawlSession::class)->history($id);
+
+	foreach($response as $crawl) {
+		echo json_encode($crawl);
+	}
+
+	break;
+
 case "deletesession":
 	if(!isset($argv[2])) {
 		echo "id argument required\n";
@@ -291,7 +306,7 @@ case "getpagespeed":
 		'strategy' => $strategy
 	]);
 
-	echo $response;
+	echo json_encode($response);
 
 	break;
 }
