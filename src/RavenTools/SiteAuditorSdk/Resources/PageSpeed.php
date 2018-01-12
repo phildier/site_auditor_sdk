@@ -10,10 +10,6 @@ class PageSpeed extends Common {
 	protected $response_key = 'page_speed';
 
 	public function get($params = []) {
-		if(is_null($this->get_endpoint)) {
-			throw new BadMethodCallException('method not supported on this resource');
-		}
-
 		$params = array_merge($this->data,$params);
 		$uri = $this->substitute($this->get_endpoint,$params);
 		$response = $this->client->request('GET', $uri, ['json' => $params]);
