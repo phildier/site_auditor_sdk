@@ -3,13 +3,15 @@
 namespace RavenTools\SiteAuditorSdk\Resources;
 
 use RavenTools\SiteAuditorSdk\Client;
+use RavenTools\SiteAuditorSdk\ResourceCollection;
 use RuntimeException;
 use BadMethodCallException;
+use JsonSerializable;
 
 /**
  * Common resource functionality
  */
-class Common {
+class Common implements JsonSerializable {
 
 	/**
 	 * Auditor SDK Client object
@@ -76,27 +78,23 @@ class Common {
 			return false;
 		}
 
-		$decoded = $this->client->decode($response);
-
-		$resources = [];
-		foreach($decoded['records'] as $record) {
-			$params = array_merge([
-					'client' => $this->client
-				],
-				(array) $record
-			);
-			$resources[] = new static($params);
-		}
-
-		return $resources;
+		return new ResourceCollection([
+			'client' => $this->client,
+			'response' => $response,
+			'resource_type' => static::class
+		]);
 	}
 
 	/**
 	 * given an id parameter, fetches and returns a record
 	 */
-	public function get($resource_id) {
+	public function get($resource_id = null) {
 		if(is_null($this->get_endpoint)) {
 			throw new BadMethodCallException('method not supported on this resource');
+		}
+
+		if(is_null($resource_id)) {
+			$resource_id = $this->id;
 		}
 
 		$uri = $this->substitute($this->get_endpoint,['id' => $resource_id]);
@@ -205,5 +203,13 @@ class Common {
 
 	public function __toString() {
 		return print_r($this->data, true);
+	}
+
+	public function to_array() {
+		return $this->data;
+	}
+
+	public function jsonSerialize() {
+		return $this->to_array();
 	}
 }

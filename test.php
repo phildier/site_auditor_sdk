@@ -9,6 +9,7 @@ use RavenTools\SiteAuditorSdk\Resources\CrawlSession;
 use RavenTools\SiteAuditorSdk\Resources\Issue;
 use RavenTools\SiteAuditorSdk\Resources\ResolvedIssue;
 use RavenTools\SiteAuditorSdk\Resources\Usage;
+use RavenTools\SiteAuditorSdk\Resources\PageSpeed;
 
 $auth_token = load_var("auth_token.txt");
 $client_id = load_var("client_id.txt");
@@ -54,6 +55,9 @@ case "listsites":
 		echo $site;
 	}
 
+	printf("total %s\n", $sites->getTotal());
+	printf("filtered %s\n", $sites->getFiltered());
+
 	break;
 
 case "getsite":
@@ -86,8 +90,7 @@ case "createsite":
 	$url = $argv[2];
 
 	$site = $client->factory(Site::class)->create([
-		'url' => $url,
-		'max_urls' => 10
+		'url' => $url
 	]);
 
 	echo $site;
@@ -134,6 +137,21 @@ case "getsession":
 
 	break;
 
+case "getcrawlhistory":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	$response = $client->factory(CrawlSession::class)->history($id);
+
+	foreach($response as $crawl) {
+		echo json_encode($crawl);
+	}
+
+	break;
+
 case "deletesession":
 	if(!isset($argv[2])) {
 		echo "id argument required\n";
@@ -144,6 +162,19 @@ case "deletesession":
 	$response = $client->factory(CrawlSession::class)->delete($id);
 
 	echo $response;
+
+	break;
+
+case "getprevioussession":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	$response = $client->factory(CrawlSession::class)->previous($id);
+
+	print_r($response);
 
 	break;
 
@@ -180,12 +211,17 @@ case "getissuetable":
 	$issues = $client->factory(Issue::class)->table([
 		'crawl_session_id' => $id,
 		'issue_name' => $issue_name,
-		'order' => 'duplicate_url desc'
+		'order' => 'blocked_by_robots desc',
+		'offset' => 0,
+		'limit' => 10,
 	]);
 
 	foreach($issues as $issue) {
 		echo $issue;
 	}
+
+	printf("total %s\n", $issues->getTotal());
+	printf("filtered %s\n", $issues->getFiltered());
 
 	break;
 
@@ -251,6 +287,26 @@ case "getusage":
 	$response = $client->factory(Usage::class)->get();
 
 	echo $response;
+
+case "getpagespeed":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	if(!isset($argv[3])) {
+		echo "strategy argument required\n";
+		exit(1);
+	}
+	$strategy = $argv[3];
+
+	$response = $client->factory(PageSpeed::class)->get([
+		'crawl_session_id' => $id,
+		'strategy' => $strategy
+	]);
+
+	echo json_encode($response);
 
 	break;
 }
