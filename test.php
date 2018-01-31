@@ -152,6 +152,19 @@ case "getcrawlhistory":
 
 	break;
 
+case "getcrawlsitemap":
+	if(!isset($argv[2])) {
+		echo "id argument required\n";
+		exit(1);
+	}
+	$id = $argv[2];
+
+	$response = $client->factory(CrawlSession::class)->sitemap($id);
+
+	echo $response;
+
+	break;
+
 case "deletesession":
 	if(!isset($argv[2])) {
 		echo "id argument required\n";
