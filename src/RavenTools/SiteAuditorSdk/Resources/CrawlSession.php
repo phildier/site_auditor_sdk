@@ -7,6 +7,7 @@ use RavenTools\SiteAuditorSdk\ResourceCollection;
 class CrawlSession extends Common {
 
 	protected $get_endpoint = "crawl_sessions/{id}";
+	protected $sitemap_endpoint = "crawl_sessions/{id}/sitemap";
 	protected $delete_endpoint = "crawl_sessions/{id}";
 	protected $previous_endpoint = "crawl_sessions/{id}/previous";
 	protected $history_endpoint = "crawl_sessions/history/{site_id}";
@@ -49,5 +50,20 @@ class CrawlSession extends Common {
 			'response' => $response,
 			'resource_type' => static::class
 		]);
+	}
+
+	public function sitemap($resource_id) {
+		$params = [
+			'id' => $resource_id,
+		];
+
+		$uri = $this->substitute($this->sitemap_endpoint, $params);
+		$response = $this->client->request('GET', $uri);
+
+		if($response === false) {
+			return false;
+		}
+
+		return $response->getBody();
 	}
 }
